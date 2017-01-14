@@ -2,11 +2,14 @@ package com.ivieleague.zeldarando.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.ivieleague.zeldarando.ZeldaRandoGame;
+import com.ivieleague.event.GameHolder;
+import com.ivieleague.zeldarando.TestGame;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        new LwjglApplication(new ZeldaRandoGame(), config);
+        config.samples = 4;
+        config.foregroundFPS = 60;
+        new LwjglApplication(new GameHolder(new TestGame()), config);
     }
 }
