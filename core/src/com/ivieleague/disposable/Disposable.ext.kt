@@ -47,7 +47,9 @@ interface DisposableCollection : Collection<Disposable>, Disposable {
         forEach { it.dispose() }
     }
 }
-
+object EmptyDisposable: Disposable{
+    override fun dispose() {}
+}
 class ImmutableDisposableCollection(of: Collection<Disposable>) : DisposableCollection, Collection<Disposable> by of
 class MutableDisposableCollection(of: MutableCollection<Disposable> = HashSet()) : DisposableCollection, MutableCollection<Disposable> by of
 

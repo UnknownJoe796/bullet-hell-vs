@@ -37,10 +37,25 @@ inline fun World.makeBody(init: BodyDef.() -> Unit): Body {
     return createBody(def)
 }
 
+inline fun World.makeJoint(init: JointDef.() -> Unit): Joint {
+    val def = JointDef()
+    def.init()
+    return createJoint(def)
+}
+
 inline fun Body.addFixture(init: FixtureDef.() -> Unit): Body {
     val def = FixtureDef()
     def.init()
     createFixture(def)
+    return this
+}
+
+inline fun Body.addFixture(shape:Shape, init: FixtureDef.() -> Unit): Body {
+    val def = FixtureDef()
+    def.init()
+    def.shape = shape
+    createFixture(def)
+    shape.dispose()
     return this
 }
 

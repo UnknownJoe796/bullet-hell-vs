@@ -2,6 +2,8 @@ package com.ivieleague.physics
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
+import com.ivieleague.event.PriorityListener
+import com.ivieleague.zeldarando.GameController
 import com.lightningkite.kotlin.Disposable
 import java.util.*
 
@@ -9,9 +11,7 @@ import java.util.*
  * Created by josep on 1/9/2017.
  */
 
-class Box2DPhysics(
-        val priority: Int = 0
-) : Disposable, ContactListener {
+class Box2DPhysics(val dependency: GameController) : Disposable, ContactListener {
 
     init {
         Box2D.init()
@@ -26,14 +26,20 @@ class Box2DPhysics(
     var velocityIterations: Int = 5
 
     val map: HashMap<Body, Module> = HashMap()
-
-    fun step(time: Float) {
-        world.step(if (timeStep == -1f) time else timeStep, velocityIterations, positionIterations)
+    val staticBody = world.makeBody {
+        type = BodyDef.BodyType.StaticBody
     }
 
+    val stepListener = PriorityListener.make(0){ time:Float ->
+        world.step(if (timeStep == -1f) time else timeStep, velocityIterations, positionIterations)
+    }
+    init{
+        dependency.step += stepListener
+    }
     override fun dispose() {
         map.clear()
         world.dispose()
+        dependency.step -= stepListener
     }
 
     //contact listener

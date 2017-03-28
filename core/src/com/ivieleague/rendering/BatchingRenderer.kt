@@ -46,8 +46,9 @@ open class BatchingRenderer(
     fun append(inMemoryMesh: InMemoryMesh) {
         flushIfCannotContain(inMemoryMesh.vertices.size, inMemoryMesh.indices.size)
         var i = currentIndexPosition
+        val startingOffset = currentVertexPosition / (vertexAttributes.vertexSize / 4)
         for (index in inMemoryMesh.indices) {
-            indices[i] = (index + currentVertexPosition).toShort()
+            indices[i] = (index + startingOffset).toShort()
             i++
         }
         currentIndexPosition += inMemoryMesh.indices.size

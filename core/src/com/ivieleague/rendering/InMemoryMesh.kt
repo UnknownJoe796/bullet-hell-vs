@@ -10,16 +10,43 @@ import java.util.*
 /**
  * Created by josep on 1/9/2017.
  */
-class InMemoryMesh(var vertices: FloatArray, var indices: ShortArray) {
+class InMemoryMesh(
+        var vertexSize: Int = 4,
+        var dimensions: Int = 3,
+        var vertices: FloatArray,
+        var indices: ShortArray
+) {
     private inline fun ShortArray.modify(amount: Int): ShortArray = ShortArray(this.size) {
         (this[it] + amount).toShort()
     }
 
     operator fun plus(other: InMemoryMesh): InMemoryMesh {
-        return InMemoryMesh(vertices + other.vertices, indices + other.indices.modify(vertices.size))
+        assert(vertexSize == other.vertexSize)
+        assert(dimensions == other.dimensions)
+        return InMemoryMesh(vertexSize, dimensions, vertices + other.vertices, indices + other.indices.modify(vertices.size / vertexSize))
     }
 
-    fun transform(matrix: Matrix4, vertexSize: Int = 4, dimensions: Int = 3) {
+    fun duplicate():InMemoryMesh {
+        val otherVertices = FloatArray(vertices.size)
+        val otherIndices = ShortArray(indices.size)
+        System.arraycopy(vertices, 0, otherVertices, 0, vertices.size)
+        System.arraycopy(indices, 0, otherIndices, 0, indices.size)
+        return InMemoryMesh(vertexSize, dimensions, otherVertices, otherIndices)
+    }
+
+    fun set(other:InMemoryMesh){
+        assert(vertexSize == other.vertexSize)
+        assert(dimensions == other.dimensions)
+        assert(vertices.size == other.vertices.size)
+        assert(indices.size == other.indices.size)
+        System.arraycopy(other.vertices, 0, vertices, 0, other.vertices.size)
+        System.arraycopy(other.indices, 0, indices, 0, other.indices.size)
+    }
+
+    infix fun transform(matrix: Matrix4) = duplicate().apply{
+        transformAssign(matrix)
+    }
+    fun transformAssign(matrix: Matrix4) {
         if (dimensions < 1 || dimensions > vertexSize) throw IndexOutOfBoundsException()
 
         val tmp = Vector3()
@@ -47,10 +74,11 @@ class InMemoryMesh(var vertices: FloatArray, var indices: ShortArray) {
         }
     }
 
-    fun translate(by: Vector3, vertexSize: Int = 4, dimensions: Int = 3) {
+    infix fun translate(by: Vector3) = duplicate().apply{
+        translateAssign(by)
+    }
+    fun translateAssign(by: Vector3) {
         if (dimensions < 1 || dimensions > vertexSize) throw IndexOutOfBoundsException()
-
-        val tmp = Vector3()
 
         var idx = 0
         when (dimensions) {
@@ -114,6 +142,8 @@ class InMemoryMesh(var vertices: FloatArray, var indices: ShortArray) {
 
         fun build(): InMemoryMesh {
             return InMemoryMesh(
+                    4,
+                    3,
                     FloatArray(vertices.size * 4).apply {
                         var currentIndex = 0
                         for (vertex in vertices) {
@@ -193,7 +223,7 @@ class InMemoryMesh(var vertices: FloatArray, var indices: ShortArray) {
                 tris[i++] = z
                 tris[i++] = color.toFloatBits()
             }
-            return InMemoryMesh(vertices, indices)
+            return InMemoryMesh(4, 3, vertices, indices)
         }
 
         fun circle(

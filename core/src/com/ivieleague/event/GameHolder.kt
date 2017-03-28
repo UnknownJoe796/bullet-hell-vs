@@ -1,25 +1,46 @@
 package com.ivieleague.event
 
+import com.badlogic.gdx.Gdx
+import com.ivieleague.service.ServiceBroker
 import com.ivieleague.zeldarando.GameController
 import com.ivieleague.zeldarando.GameModel
 import com.ivieleague.zeldarando.GameView
 import com.lightningkite.kotlin.Disposable
+import com.lightningkite.kotlin.runAll
 import java.util.*
 
 /**
  * Created by josep on 1/10/2017.
  */
-class GameHolder(val game: GameModel<GameController, GameView>) : ApplicationEvents(), GameController, GameView {
-    override val services: MutableMap<String, Any> = HashMap()
-    override val step: TreeSet<PriorityListener1<Float>> get() = onRender
-    override val render: TreeSet<PriorityListener1<Float>> get() = onRender
+class GameHolder(val game: GameModel<GameController, GameView>) : ApplicationEvents() {
+    val step: TreeSet<PriorityListener1<Float>> = TreeSet()
+    val render: TreeSet<PriorityListener1<Float>> = TreeSet()
+
+    val gameController = object: GameController{
+        override val services: ServiceBroker<GameController> = ServiceBroker(this)
+        override val step: TreeSet<PriorityListener1<Float>>
+            get() = this@GameHolder.step
+    }
+    val gameView = object: GameView{
+        override val services: ServiceBroker<GameView> = ServiceBroker(this)
+        override val render: TreeSet<PriorityListener1<Float>>
+            get() = this@GameHolder.render
+        override val resize: TreeSet<PriorityListener2<Int, Int>>
+            get() = this@GameHolder.onResize
+    }
 
     var controller: Disposable? = null
     var view: Disposable? = null
 
     override fun create() {
-        controller = game.generateController(this)
-        view = game.generateView(this)
+        controller = game.generateController(gameController)
+        view = game.generateView(gameView)
+    }
+
+    override fun render() {
+        super.render()
+        step.runAll(Gdx.graphics.deltaTime)
+        render.runAll(Gdx.graphics.deltaTime)
     }
 
     override fun dispose() {

@@ -4,8 +4,10 @@ import com.ivieleague.disposable.CollectionItemDisposable
 import com.ivieleague.disposable.ImmutableDisposableCollection
 import com.ivieleague.disposable.MutableDisposableCollection
 import com.ivieleague.event.PriorityListener1
+import com.ivieleague.event.PriorityListener2
 import com.ivieleague.kotlin.ObservableCollection
 import com.ivieleague.kotlin.ObservableCollectionWrapper
+import com.ivieleague.service.ServiceBroker
 import com.lightningkite.kotlin.Disposable
 import java.util.*
 
@@ -17,13 +19,14 @@ interface GameModel<in ControllerDependency, in ViewDependency>
     : Model<ControllerDependency, Disposable, ViewDependency, Disposable>
 
 interface GameController {
-    val services: MutableMap<String, Any>
+    val services: ServiceBroker<GameController>
     val step: TreeSet<PriorityListener1<Float>>
 }
 
 interface GameView {
-    val services: MutableMap<String, Any>
+    val services: ServiceBroker<GameView>
     val render: TreeSet<PriorityListener1<Float>>
+    val resize: TreeSet<PriorityListener2<Int, Int>>
 }
 
 
