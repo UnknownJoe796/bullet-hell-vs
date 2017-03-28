@@ -1,4 +1,4 @@
-package com.ivieleague.zeldarando;
+package com.ivieleague.bullethellvs;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;

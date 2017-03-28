@@ -1,10 +1,10 @@
 package com.ivieleague.event
 
 import com.badlogic.gdx.Gdx
+import com.ivieleague.bullethellvs.GameController
+import com.ivieleague.bullethellvs.GameModel
+import com.ivieleague.bullethellvs.GameView
 import com.ivieleague.service.ServiceBroker
-import com.ivieleague.zeldarando.GameController
-import com.ivieleague.zeldarando.GameModel
-import com.ivieleague.zeldarando.GameView
 import com.lightningkite.kotlin.Disposable
 import com.lightningkite.kotlin.runAll
 import java.util.*

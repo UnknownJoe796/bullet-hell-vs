@@ -2,8 +2,8 @@ package com.ivieleague.physics
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
+import com.ivieleague.bullethellvs.GameController
 import com.ivieleague.event.PriorityListener
-import com.ivieleague.zeldarando.GameController
 import com.lightningkite.kotlin.Disposable
 import java.util.*
 

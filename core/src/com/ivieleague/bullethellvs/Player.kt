@@ -1,27 +1,23 @@
-package com.ivieleague.zeldarando
+package com.ivieleague.bullethellvs
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.Colors
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
-import com.badlogic.gdx.physics.box2d.JointDef
-import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef
-import com.ivieleague.disposable.listen
 import com.ivieleague.disposable.makeDisposable
 import com.ivieleague.event.listen
-import com.ivieleague.kotlin.*
+import com.ivieleague.kotlin.aside
+import com.ivieleague.kotlin.minus
+import com.ivieleague.kotlin.toVector3
 import com.ivieleague.physics.Box2DPhysics
 import com.ivieleague.physics.addFixture
 import com.ivieleague.physics.makeBody
-import com.ivieleague.physics.makeJoint
 import com.ivieleague.rendering.BatchingRenderer
 import com.ivieleague.rendering.InMemoryMesh
-import com.ivieleague.service.getType
 import com.lightningkite.kotlin.Disposable
 
 /**
@@ -40,7 +36,7 @@ class Player : GameModel<GameController, GameView> {
         const val FRICTION = 200f
         const val MAX_FOOT_SPEED = 10f
         const val KNOCKBACK_SPEED = 35f
-        const val CHARGE_TIME = .25f *.95f
+        const val CHARGE_TIME = .25f * .95f
     }
 
     override fun generateController(dependency: GameController): Disposable = makeDisposable {
@@ -97,12 +93,12 @@ class Player : GameModel<GameController, GameView> {
                 chargeTime = 0f
             }
 
-            if(Gdx.input.isKeyPressed(Input.Keys.SPACE))
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
                 chargeTime += time
             else
                 chargeTime = 0f
         }
-        listen(dependency.step, 1){
+        listen(dependency.step, 1) {
             //save current
             position.set(module.body.position)
             velocity.set(module.body.linearVelocity)

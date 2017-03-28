@@ -1,30 +1,26 @@
-package com.ivieleague.zeldarando
+package com.ivieleague.bullethellvs
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector2
 import com.ivieleague.disposable.EmptyDisposable
-import com.ivieleague.disposable.disposable
 import com.ivieleague.disposable.makeDisposable
 import com.ivieleague.event.listen
 import com.ivieleague.kotlin.aside
 import com.ivieleague.rendering.BatchingRenderer
 import com.ivieleague.rendering.InMemoryMesh
-import com.ivieleague.service.getType
 import com.lightningkite.kotlin.Disposable
 import java.util.*
 
 class TestGame : AbstractImmutableGameModelCollection<GameController, GameView, GameModel<GameController, GameView>>() {
     override val collection = HashSet<GameModel<GameController, GameView>>()
 
-    val camera = OrthographicCameraEntity().apply{
+    val camera = OrthographicCameraEntity().apply {
         zoom = 20f
     }
+
     init {
         collection.add(camera)
 
@@ -33,7 +29,7 @@ class TestGame : AbstractImmutableGameModelCollection<GameController, GameView, 
             override fun generateController(dependency: GameController): Disposable = EmptyDisposable
 
             override fun generateView(dependency: GameView): Disposable = makeDisposable {
-                val batchingRenderer = dependency.services.get<BatchingRenderer>().aside{add(it)}.service
+                val batchingRenderer = dependency.services.get<BatchingRenderer>().aside { add(it) }.service
                 listen(dependency.render, -100) {
                     Gdx.gl.glClearColor(1f, 0f, 0f, 1f)
                     Gdx.gl.glClear(
@@ -88,7 +84,7 @@ class TestGame : AbstractImmutableGameModelCollection<GameController, GameView, 
             val mesh = InMemoryMesh.circle(Vector2(150f, 150f), 0f, 100f, Color.GOLD, 24)
 
             override fun generateController(dependency: GameController): Disposable = makeDisposable {
-//                listen(dependency.step, 2) { time ->
+                //                listen(dependency.step, 2) { time ->
 //                    //mutate
 //                    for (i in 0..(mesh.vertices.size / 4) - 1) {
 //                        mesh.vertices[i * 4] += (Math.random() * 2.0 - 1.0).toFloat().times(.2f)
@@ -98,7 +94,7 @@ class TestGame : AbstractImmutableGameModelCollection<GameController, GameView, 
             }
 
             override fun generateView(dependency: GameView): Disposable = makeDisposable {
-                val batchingRenderer = dependency.services.get<BatchingRenderer>().aside{add(it)}.service
+                val batchingRenderer = dependency.services.get<BatchingRenderer>().aside { add(it) }.service
 
                 listen(dependency.render, 6) { time ->
                     batchingRenderer.matrix = Matrix4().apply {
