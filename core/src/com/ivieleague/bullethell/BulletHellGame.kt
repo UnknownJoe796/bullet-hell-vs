@@ -30,7 +30,7 @@ class BulletHellGame() : ApplicationListener {
     fun reset() {
         println("RESET")
         world.clear()
-//        world.entities += Background(Color.BLACK)
+        world.entities += Background(Color.BLACK)
         world.entities += playerOne.apply {
             reset()
             position.x = 0f

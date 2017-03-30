@@ -22,7 +22,7 @@ class ObservableCollectionWrapper<E>(val inner: MutableCollection<E> = HashSet()
     override fun containsAll(elements: Collection<E>): Boolean = inner.containsAll(elements)
     override fun isEmpty(): Boolean = inner.isEmpty()
 
-    override fun add(element: E): Boolean = inner.add(element).aside {
+    override fun add(element: E): Boolean = inner.add(element).also {
         if (it) onAdd.runAll(element)
     }
 
@@ -45,14 +45,14 @@ class ObservableCollectionWrapper<E>(val inner: MutableCollection<E> = HashSet()
         val wraps = inner.iterator()
         var lastElement: E? = null
         override fun hasNext(): Boolean = wraps.hasNext()
-        override fun next(): E = wraps.next().aside { lastElement = it }
+        override fun next(): E = wraps.next().also { lastElement = it }
         override fun remove() {
             wraps.remove()
             onRemove.runAll(lastElement as E)
         }
     }
 
-    override fun remove(element: E): Boolean = inner.remove(element).aside {
+    override fun remove(element: E): Boolean = inner.remove(element).also {
         if (it) onRemove.runAll(element)
     }
 
