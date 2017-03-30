@@ -45,7 +45,7 @@ class TestGame : AbstractImmutableGameModelCollection<GameController, GameView, 
             }
         })
 
-        collection.add(Player())
+        collection.add(ZeldaPlayer())
 
 //        //moving object
 //        collection.add(object : GameModel<GameController, GameView> {

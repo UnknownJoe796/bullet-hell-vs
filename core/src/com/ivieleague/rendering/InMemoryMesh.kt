@@ -100,6 +100,19 @@ class InMemoryMesh(
         }
     }
 
+    infix fun transformColorAssign(
+            colorTransform: (Float) -> Float
+    ) {
+        if (dimensions < 1 || dimensions > vertexSize) throw IndexOutOfBoundsException()
+
+        var idx = 0
+        while (idx + vertexSize <= vertices.size) {
+            val current = vertices[idx + dimensions]
+            vertices[idx + dimensions] = colorTransform(current)
+            idx += vertexSize
+        }
+    }
+
     class Builder(
             val vertices: ArrayList<Vertex> = ArrayList<Vertex>(),
             val indices: ArrayList<Short> = ArrayList<Short>()
@@ -218,10 +231,10 @@ class InMemoryMesh(
             val vertices = FloatArray(points.size * 4)
             i = 0
             for (pt in points) {
-                tris[i++] = pt.x
-                tris[i++] = pt.y
-                tris[i++] = z
-                tris[i++] = color.toFloatBits()
+                vertices[i++] = pt.x
+                vertices[i++] = pt.y
+                vertices[i++] = z
+                vertices[i++] = color.toFloatBits()
             }
             return InMemoryMesh(4, 3, vertices, indices)
         }
