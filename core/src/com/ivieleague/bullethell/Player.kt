@@ -11,7 +11,7 @@ import com.ivieleague.kotlin.times
 import com.ivieleague.rendering.InMemoryMesh
 import com.ivieleague.service.getType
 
-class Player : Entity {
+class Player(val gunLoadout: GunLoadout) : Entity {
     override val depth: Int get() = 0
 
     val position = Vector2()
@@ -44,50 +44,26 @@ class Player : Entity {
         }
     }
 
-    fun shoot(world: World, pattern: Int = 0) {
-        if (burnout) return
-        when (pattern) {
-            0 -> {
-                temp += .1f
+    fun doButton(world: World, pattern: Int = 0) {
+        gunLoadout.doButton(object : ShipInterface {
+            override fun shoot(velocity: Vector2, acceleration: Vector2, size: Float) {
+                if (burnout) return
+                temp += (size * 10f + velocity.len() * 2f + acceleration.len() * 2f) / 500f
                 world.entities += Bullet().also { it ->
                     it.color = color
                     it.position.set(position)
-                    it.velocity.set(Vector2_polar(12f, angle.toDouble()))
+                    it.velocity.set(velocity.rotateRad(angle))
+                    it.acceleration.set(acceleration.rotateRad(angle))
+                    it.radius = size
                 }
             }
-            1 -> {
-                temp += .2f
-                for (horiz in -1..1) {
-                    world.entities += Bullet().also {
-                        it.color = color
-                        it.position.set(position)
-                        it.velocity.set(Vector2_polar(12f, angle.toDouble() + horiz * Math.PI * .125f))
-                    }
-                }
+
+            override fun boost(time: Float) {
+                if (burnout) return
+                temp += time
+                boost = time
             }
-            2 -> {
-                temp += .4f
-                for (horiz in -5..5) {
-                    world.entities += Bullet().also {
-                        it.color = color
-                        it.position.set(position)
-                        it.velocity.set(Vector2_polar(12f, angle.toDouble() + horiz * Math.PI * .125f))
-                    }
-                }
-            }
-            3 -> {
-                temp += .2f
-                world.entities += Bullet().also {
-                    it.color = color
-                    it.position.set(position)
-                    it.velocity.set(Vector2_polar(20f, angle.toDouble()))
-                }
-            }
-            4 -> {
-                temp += .4f
-                boost = .3f
-            }
-        }
+        }, pattern)
     }
 
     override fun step(world: World, time: Float) {
@@ -113,6 +89,13 @@ class Player : Entity {
         if (health <= 0f) {
             world.entities -= this
             world.events.dispatch(DeathEvent(this))
+            for (angleInt in 0..32) {
+                world.entities += Bullet().also { it ->
+                    it.color = color
+                    it.position.set(position)
+                    it.velocity.set(Vector2_polar(8f, angleInt / 32.0 * Math.PI * 2))
+                }
+            }
         }
     }
 

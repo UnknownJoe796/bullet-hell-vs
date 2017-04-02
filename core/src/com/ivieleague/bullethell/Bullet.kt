@@ -13,6 +13,7 @@ class Bullet : Entity {
 
     val position = Vector2()
     val velocity = Vector2()
+    var acceleration = Vector2()
     var color = Color.RED
     var radius = .5f
     var damage = .1f
@@ -21,6 +22,7 @@ class Bullet : Entity {
 
     override fun step(world: World, time: Float) {
         position += velocity * time
+        velocity += acceleration * time
         life -= time
         if (life <= 0f) world.entities -= this
     }
@@ -42,6 +44,8 @@ class Bullet : Entity {
             translate(position.x, position.y, 0f)
             scale(radius, radius, 1f)
         })
+        val colorbits = color.toFloatBits()
+        transformedMesh.transformColorAssign { colorbits }
         renderer.batchingRenderer.append(transformedMesh)
     }
 }

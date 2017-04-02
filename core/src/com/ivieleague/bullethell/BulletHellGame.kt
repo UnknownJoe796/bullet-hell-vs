@@ -24,8 +24,8 @@ class BulletHellGame() : ApplicationListener {
     val world = World()
     val view = WorldView()
 
-    val playerOne = Player()
-    val playerTwo = Player()
+    val playerOne = Player(DefaultGunLoadout())
+    val playerTwo = Player(DefaultGunLoadout())
 
     fun reset() {
         println("RESET")
@@ -49,9 +49,6 @@ class BulletHellGame() : ApplicationListener {
 
     init {
         reset()
-        world.events.get<Player.DeathEvent>() += {
-            reset()
-        }
     }
 
     override fun create() {
@@ -81,12 +78,17 @@ class BulletHellGame() : ApplicationListener {
         playerOne.move(joy)
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            playerOne.shoot(world)
+            playerOne.doButton(world, 0)
+        }
+        for (button in Input.Keys.NUM_1..Input.Keys.NUM_9) {
+            if (Gdx.input.isKeyJustPressed(button)) {
+                playerOne.doButton(world, button - Input.Keys.NUM_1)
+            }
         }
 
-        for (buttonIndex in 0..12) {
+        for (buttonIndex in 0..8) {
             if (controllerOne != null && controllerOne.getButtonJustPressed(buttonIndex)) {
-                playerOne.shoot(world, buttonIndex)
+                playerOne.doButton(world, buttonIndex)
             }
         }
 
@@ -108,12 +110,23 @@ class BulletHellGame() : ApplicationListener {
         playerTwo.move(joy)
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
-            playerTwo.shoot(world)
+            playerTwo.doButton(world)
         }
 
-        for (buttonIndex in 0..12) {
+        for (buttonIndex in 0..8) {
             if (controllerTwo != null && controllerTwo.getButtonJustPressed(buttonIndex)) {
-                playerTwo.shoot(world, buttonIndex)
+                playerTwo.doButton(world, buttonIndex)
+            }
+        }
+
+
+        //Reset
+        if (world.entities.count { it is Player } <= 1) {
+            if (controllerOne != null && controllerOne.getButtonJustPressed(9)) {
+                reset()
+            }
+            if (controllerTwo != null && controllerTwo.getButtonJustPressed(9)) {
+                reset()
             }
         }
 
