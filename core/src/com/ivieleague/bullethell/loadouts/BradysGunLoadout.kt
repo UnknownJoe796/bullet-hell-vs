@@ -10,12 +10,12 @@ import com.ivieleague.kotlin.Vector2_polar
  */
 class BradysGunLoadout : GunLoadout {
 
-    var secondSet = true
+    //var distanceMod = 1f
+    //var secondSet = true
+    var reverseMod = 1f
     var sweetheartMod = 1
     var swingerMod = .0f
     var swingerMod2 = true
-    var reverseMod = 1f
-    var distanceMod = 1f
 
     override fun doButton(shipInterface: ShipInterface, button: Int) {
         /* if(button == 8){
