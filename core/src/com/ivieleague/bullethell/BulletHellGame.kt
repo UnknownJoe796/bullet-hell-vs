@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
 import com.ivieleague.bullethell.loadouts.BradysGunLoadout
-import com.ivieleague.bullethell.loadouts.Mode8MadnessGunLoadout
+import com.ivieleague.bullethell.loadouts.DeathClampLoadout
 import com.ivieleague.kotlin.plusAssign
 
 /**
@@ -26,7 +26,7 @@ class BulletHellGame() : ApplicationListener {
     val world = World()
     val view = WorldView()
 
-    val playerOne = Player(Mode8MadnessGunLoadout())
+    val playerOne = Player(DeathClampLoadout())
     val playerTwo = Player(BradysGunLoadout())
 
     fun reset() {
@@ -88,7 +88,7 @@ class BulletHellGame() : ApplicationListener {
             }
         }
 
-        for (buttonIndex in 0..8) {
+        for (buttonIndex in 0..9) {
             if (controllerOne != null && controllerOne.getButtonJustPressed(buttonIndex)) {
                 playerOne.doButton(world, buttonIndex)
             }
@@ -115,7 +115,7 @@ class BulletHellGame() : ApplicationListener {
             playerTwo.doButton(world)
         }
 
-        for (buttonIndex in 0..8) {
+        for (buttonIndex in 0..9) {
             if (controllerTwo != null && controllerTwo.getButtonJustPressed(buttonIndex)) {
                 playerTwo.doButton(world, buttonIndex)
             }
