@@ -24,8 +24,8 @@ class BulletHellGame() : ApplicationListener {
     val world = World()
     val view = WorldView()
 
-    val playerOne = Player(DefaultGunLoadout())
-    val playerTwo = Player(BradysGunLoadout())
+    val playerOne = Player(BradysGunLoadout())
+    val playerTwo = Player(DefaultGunLoadout ())
 
     fun reset() {
         println("RESET")
