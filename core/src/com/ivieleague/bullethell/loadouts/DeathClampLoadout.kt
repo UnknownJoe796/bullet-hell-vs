@@ -93,28 +93,6 @@ class DeathClampLoadout : GunLoadout {
             7 -> baseAngle += Math.PI.toFloat()
             8 -> baseAngle += Math.PI.toFloat() * .25f
             9 -> baseAngle -= Math.PI.toFloat() * .25f
-//            0 -> shipInterface.shoot(Vector2_polar(bulletSpeed, baseAngle.applyRando()), Vector2(-(bulletSpeed / 9f).sqr(), 0f), bulletSize)
-//            1 -> {
-//                swing += .2
-//                shipInterface.shoot(Vector2_polar(bulletSpeed, baseAngle.applyRando() + Math.sin(swing) * .5f), Vector2.Zero, bulletSize)
-//                shipInterface.shoot(Vector2_polar(bulletSpeed, baseAngle.applyRando() - Math.sin(swing) * .5f), Vector2.Zero, bulletSize)
-//            }
-//            2 -> {
-//                for (i in -10..10) {
-//                    shipInterface.shoot(Vector2_polar(bulletSpeed, baseAngle.applyRando() + i / 40.0 * Math.PI), Vector2.Zero, bulletSize)
-//                }
-//            }
-//            3 -> {
-//                swing += .2
-//                shipInterface.shoot(Vector2_polar(bulletSpeed, baseAngle.applyRando() + Math.sin(swing) * .5f), Vector2_polar(bulletSpeed, baseAngle.applyRando() - Math.sin(swing) * .5f).apply { x = 0f }, bulletSize)
-//                shipInterface.shoot(Vector2_polar(bulletSpeed, baseAngle.applyRando() - Math.sin(swing) * .5f), Vector2_polar(bulletSpeed, baseAngle.applyRando() + Math.sin(swing) * .5f).apply { x = 0f }, bulletSize)
-//            }
-//            4 -> shipInterface.boost(.3f)
-//            5 -> fastMode = !fastMode
-//            6 -> bigMode = !bigMode
-//            7 -> randomMode = !randomMode
-//            8 -> baseAngle += Math.PI * .25
-//            9 -> baseAngle -= Math.PI * .25
         }
     }
 
