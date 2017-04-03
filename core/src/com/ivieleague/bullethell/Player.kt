@@ -48,7 +48,7 @@ class Player(val gunLoadout: GunLoadout) : Entity {
         gunLoadout.doButton(object : ShipInterface {
             override fun shoot(velocity: Vector2, acceleration: Vector2, size: Float) {
                 if (burnout) return
-                if (size < .25f || size > 2f) return
+                if (size < .5f || size > 2f) return
                 if (temp > 2f) return
                 temp += ((size - .5f) * 100f + velocity.len() * 2f + acceleration.len() * 2f) / 500f
                 world.entities += Bullet().also { it ->

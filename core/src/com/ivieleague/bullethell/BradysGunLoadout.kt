@@ -14,6 +14,7 @@ class BradysGunLoadout:GunLoadout {
     var swingerMod = .0f
     var swingerMod2 = true
     var reverseMod = 1f
+    var distanceMod = 1f
 
     override fun doButton(shipInterface: ShipInterface, button: Int) {
         if(button == 8){
@@ -49,7 +50,7 @@ class BradysGunLoadout:GunLoadout {
                     }
                 }
                 3 -> {
-                    shipInterface.shoot(Vector2(10f, swingerMod * .5f) , Vector2.Zero, 1.75f)
+                    shipInterface.shoot(Vector2(10f * reverseMod, swingerMod * .5f) , Vector2.Zero, 1.75f)
                     if(swingerMod2)
                         swingerMod += 3
                     else
@@ -76,7 +77,7 @@ class BradysGunLoadout:GunLoadout {
                 0 -> {
                     for (horiz in -1..1) {
 
-                        shipInterface.shoot(Vector2_polar(20f * reverseMod, horiz * Math.PI * .125f), Vector2(0f, swingerMod * .5f * reverseMod), .4f)
+                        shipInterface.shoot(Vector2_polar(20f * reverseMod, horiz * Math.PI * .125f), Vector2(0f, swingerMod * .5f * reverseMod), .5f)
                         if (swingerMod2)
                             swingerMod += 3
                         else
@@ -86,17 +87,22 @@ class BradysGunLoadout:GunLoadout {
                     }
                 }
                 1 -> {
-                    for (horiz in -1..1) {
-                        shipInterface.shoot(Vector2_polar(12f, horiz * Math.PI * .125f), Vector2.Zero, 1f)
-                    }
+                    shipInterface.shoot(Vector2(30f * reverseMod, 0f), Vector2(-10f, 0f), .5f)
                 }
                 2 -> {
-                    for (horiz in -5..5) {
-                        shipInterface.shoot(Vector2_polar(12f, horiz * Math.PI * .125f), Vector2.Zero, 1f)
-                    }
+                    shipInterface.shoot(Vector2(10 * distanceMod * reverseMod, 0f), Vector2(0f, 5f), .5f)
+
+                    distanceMod += .5f
+                    if(distanceMod == 3f)
+                        distanceMod = 1f
+
                 }
                 3 -> {
-                    shipInterface.shoot(Vector2_polar(20f, 0.0), Vector2.Zero, 1f)
+                    shipInterface.shoot(Vector2(10 * distanceMod * reverseMod, 0f), Vector2(0f, -5f), .5f)
+
+                    distanceMod += .5f
+                    if(distanceMod == 3f)
+                        distanceMod = 1f
                 }
                 4 -> {
                     shipInterface.boost(.3f)
