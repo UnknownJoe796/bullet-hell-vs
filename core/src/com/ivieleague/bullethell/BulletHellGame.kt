@@ -7,6 +7,8 @@ import com.badlogic.gdx.controllers.Controllers
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
+import com.ivieleague.bullethell.loadouts.BradysGunLoadout
+import com.ivieleague.bullethell.loadouts.Mode8MadnessGunLoadout
 import com.ivieleague.kotlin.plusAssign
 
 /**

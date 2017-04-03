@@ -1,6 +1,9 @@
-package com.ivieleague.bullethell
+package com.ivieleague.bullethell.loadouts
 
 import com.badlogic.gdx.math.Vector2
+import com.ivieleague.bullethell.GunLoadout
+import com.ivieleague.bullethell.ShipInterface
+import com.ivieleague.bullethell.sqr
 import com.ivieleague.kotlin.Vector2_polar
 
 /**
