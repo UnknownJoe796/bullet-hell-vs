@@ -77,7 +77,7 @@ class BradysGunLoadout:GunLoadout {
                 0 -> {
                     for (horiz in -1..1) {
 
-                        shipInterface.shoot(Vector2_polar(20f * reverseMod, horiz * Math.PI * .125f), Vector2(0f, swingerMod * .5f * reverseMod), .5f)
+                        shipInterface.shoot(Vector2_polar(15f * reverseMod, horiz * Math.PI * .125f), Vector2(0f, swingerMod * .5f * reverseMod), .5f)
                         if (swingerMod2)
                             swingerMod += 3
                         else
