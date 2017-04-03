@@ -22,7 +22,7 @@ class BradysGunLoadout:GunLoadout {
             println(secondSet)
             return
         }
-        if (button == 7)
+        if (button == 9)
             reverseMod *= -1
         if(secondSet) {
 
@@ -68,6 +68,9 @@ class BradysGunLoadout:GunLoadout {
                 6 -> {
                     shipInterface.shoot(Vector2(24f, 24f), Vector2(0f, -24f), .5f)
                 }
+                7 -> {
+                    shipInterface.shoot(Vector2(0f, 0f), Vector2(0f, 0f), 2f)
+                }
 
 
             }
@@ -107,8 +110,8 @@ class BradysGunLoadout:GunLoadout {
                 4 -> {
                     shipInterface.boost(.3f)
                 }
-                5 -> {
-                    shipInterface.shoot(Vector2(32f, 0f), Vector2(-24f, 0f), 1f)
+                7 -> {
+                    shipInterface.shoot(Vector2(0f, 0f), Vector2(0f, 0f), 2f)
                 }
                 6 -> {
                     shipInterface.shoot(Vector2(24f, 24f), Vector2(0f, -24f), 1f)
