@@ -4,10 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector2
 import com.ivieleague.bullethell.lib.*
-import com.ivieleague.kotlin.Vector2Immutable
-import com.ivieleague.kotlin.immutable
-import com.ivieleague.kotlin.plusAssign
-import com.ivieleague.kotlin.times
+import com.ivieleague.kotlin.*
 import com.ivieleague.rendering.InMemoryMesh
 import com.ivieleague.service.getType
 
@@ -77,7 +74,7 @@ class Bullet(
                 world.entities += Bullet(playerAngle = bullet.playerAngle).also { it ->
                     it.color = bullet.color
                     it.position.set(bullet.position)
-                    it.velocity.set(velocity.rotateRad(bullet.velocity.angleRad()))
+                    it.velocity.set(bullet.velocity + velocity.rotateRad(bullet.velocity.angleRad()))
                     it.energy = energy
                     it.controller = controller
                     it.radius = size
