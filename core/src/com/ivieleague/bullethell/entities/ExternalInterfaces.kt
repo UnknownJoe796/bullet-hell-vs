@@ -28,7 +28,11 @@ interface BulletInterface {
     val positionImmutable: Vector2Immutable
     val velocityImmutable: Vector2Immutable
 
-    fun accelerate(
+    fun accelerateAbsolute(
+            amount: Vector2
+    ): PotentialAction
+
+    fun accelerateRelative(
             amount: Vector2
     ): PotentialAction
 

@@ -21,8 +21,8 @@ class SimpleScheme : PlayerController {
         if (controls.buttonJustPressed(1)) {
             fire(Vector2(10f, 0f), energy = .15f, controller = {
                 if (controls.buttons[2]) {
-                    val towardsMe = ship.positionImmutable.cpy().minus(positionImmutable.cpy()).clamp(0f, 1f).scl(400f)
-                    accelerate(towardsMe).invoke()
+                    val towardsMe = ship.positionImmutable.cpy().minus(positionImmutable.cpy()).clamp(0f, 1f).scl(40f)
+                    accelerateAbsolute(towardsMe).invoke()
                 }
             }).invoke()
         }

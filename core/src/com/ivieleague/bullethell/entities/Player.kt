@@ -68,7 +68,7 @@ class Player(
                 if (cost > player.energy) return
                 player.energy -= cost
 
-                world.entities += Bullet().also { it ->
+                world.entities += Bullet(player.angle).also { it ->
                     it.color = player.color
                     it.position.set(player.position)
                     it.velocity.set(velocity.rotateRad(player.angle))
@@ -99,7 +99,7 @@ class Player(
             world.entities -= this
             world.events.dispatch(DeathEvent(this))
             for (angleInt in 0..32) {
-                world.entities += Bullet().also { it ->
+                world.entities += Bullet(angle).also { it ->
                     it.color = color
                     it.position.set(position)
                     it.velocity.set(Vector2_polar(8f, angleInt / 32.0 * Math.PI * 2))

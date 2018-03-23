@@ -3,10 +3,7 @@ package com.ivieleague.bullethell.entities
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector2
-import com.ivieleague.bullethell.lib.BatchingRendererService
-import com.ivieleague.bullethell.lib.Entity
-import com.ivieleague.bullethell.lib.World
-import com.ivieleague.bullethell.lib.WorldView
+import com.ivieleague.bullethell.lib.*
 import com.ivieleague.kotlin.Vector2Immutable
 import com.ivieleague.kotlin.immutable
 import com.ivieleague.kotlin.plusAssign
@@ -15,6 +12,7 @@ import com.ivieleague.rendering.InMemoryMesh
 import com.ivieleague.service.getType
 
 class Bullet(
+        val playerAngle: Float,
         var color: Color = Color.RED,
         var life: Float = 7f,
         var damage: Float = .1f,
@@ -32,14 +30,33 @@ class Bullet(
         override val positionImmutable: Vector2Immutable = bullet.position.immutable()
         override val velocityImmutable: Vector2Immutable = bullet.velocity.immutable()
 
-        override fun accelerate(amount: Vector2): PotentialAction = object : PotentialAction {
-            override val cost = amount.len().times(seconds).times(ACCELERATE_COST)
+        override fun accelerateAbsolute(amount: Vector2): PotentialAction = object : PotentialAction {
+            override val cost = run {
+                val length = amount.len()
+                val secondCost = length * ACCELERATE_COST + length.sqr() * ACCELERATE_SQUARED_COST
+                secondCost.times(seconds)
+            }
 
             override fun invoke() {
                 if (cost > bullet.energy) return
                 bullet.energy -= cost
 
                 bullet.velocity.add(amount.times(seconds))
+            }
+        }
+
+        override fun accelerateRelative(amount: Vector2): PotentialAction = object : PotentialAction {
+            override val cost = run {
+                val length = amount.len()
+                val secondCost = length * ACCELERATE_COST + length.sqr() * ACCELERATE_SQUARED_COST
+                secondCost.times(seconds)
+            }
+
+            override fun invoke() {
+                if (cost > bullet.energy) return
+                bullet.energy -= cost
+
+                bullet.velocity.add(amount.times(seconds).rotateRad(bullet.playerAngle))
             }
         }
 
@@ -55,10 +72,10 @@ class Bullet(
                 if (cost > bullet.energy) return
                 bullet.energy -= cost
 
-                world.entities += Bullet().also { it ->
+                world.entities += Bullet(playerAngle = bullet.playerAngle).also { it ->
                     it.color = bullet.color
                     it.position.set(bullet.position)
-                    it.velocity.set(velocity)
+                    it.velocity.set(velocity.rotateRad(bullet.velocity.angleRad()))
                     it.energy = energy
                     it.controller = controller
                     it.radius = size
@@ -77,7 +94,8 @@ class Bullet(
     }
 
     companion object {
-        const val ACCELERATE_COST: Float = .0025f //CHECK?
+        const val ACCELERATE_COST: Float = .0025f
+        const val ACCELERATE_SQUARED_COST: Float = .000025f
 
         val mesh: InMemoryMesh = InMemoryMesh.circle(
                 Vector2(0f, 0f),
