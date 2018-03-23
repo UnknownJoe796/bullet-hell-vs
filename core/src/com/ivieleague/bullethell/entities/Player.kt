@@ -52,7 +52,7 @@ class Player(
                 if (cost > player.energy) return
                 player.energy -= cost
 
-                player.position.add(amount.times(seconds))
+                player.position.add(amount.times(seconds).rotateRad(player.angle))
             }
         }
 

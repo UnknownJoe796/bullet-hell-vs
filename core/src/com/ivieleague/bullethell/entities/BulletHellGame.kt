@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2
 import com.ivieleague.bullethell.lib.World
 import com.ivieleague.bullethell.lib.WorldView
 import com.ivieleague.bullethell.playerschemes.BradysScheme
-import com.ivieleague.bullethell.playerschemes.SimpleScheme
 import com.ivieleague.bullethell.playerschemes.TotalControlScheme
 import com.ivieleague.kotlin.plusAssign
 
@@ -30,7 +29,7 @@ class BulletHellGame() : ApplicationListener {
     val view = WorldView()
 
     val playerOne = Player(BradysScheme())
-    val playerTwo = Player(SimpleScheme())
+    val playerTwo = Player(TotalControlScheme())
 
     fun reset() {
         println("RESET")
