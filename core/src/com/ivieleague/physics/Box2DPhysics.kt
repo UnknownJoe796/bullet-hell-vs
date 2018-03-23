@@ -2,14 +2,14 @@ package com.ivieleague.physics
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
-import com.lightningkite.kotlin.Disposable
+import java.io.Closeable
 import java.util.*
 
 /**
  * Created by josep on 1/9/2017.
  */
 
-class Box2DPhysics() : Disposable, ContactListener {
+class Box2DPhysics() : Closeable, ContactListener {
 
     init {
         Box2D.init()
@@ -31,7 +31,8 @@ class Box2DPhysics() : Disposable, ContactListener {
     fun step(time: Float) {
         world.step(if (timeStep == -1f) time else timeStep, velocityIterations, positionIterations)
     }
-    override fun dispose() {
+
+    override fun close() {
         map.clear()
         world.dispose()
     }
@@ -76,12 +77,12 @@ class Box2DPhysics() : Disposable, ContactListener {
             val owner: Any?,
             val body: Body,
             val listener: ContactListener? = null
-    ) : Disposable {
+    ) : Closeable {
         init {
             physics.map[body] = this
         }
 
-        override fun dispose() {
+        override fun close() {
             physics.map.remove(body)
             physics.world.destroyBody(body)
         }

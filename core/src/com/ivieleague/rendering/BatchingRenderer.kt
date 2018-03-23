@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Matrix4
-import com.lightningkite.kotlin.Disposable
+import java.io.Closeable
 import java.util.*
 
 /**
@@ -20,7 +20,7 @@ open class BatchingRenderer(
         val vertexAttributes: VertexAttributes = BatchingRenderer.buildVertexAttributes(false, true, 0),
         val shader: ShaderProgram = ImmediateModeRenderer20.createDefaultShader(false, true, 0),
         val deleteShaderAtEnd: Boolean = true
-) : Disposable {
+) : Closeable {
     val vertices = FloatArray(numVerticies)
     val indices = ShortArray(numIndices)
     var currentVertexPosition = 0
@@ -83,7 +83,7 @@ open class BatchingRenderer(
         currentIndexPosition = 0
     }
 
-    override fun dispose() {
+    override fun close() {
         mesh.dispose()
         if (deleteShaderAtEnd) shader.dispose()
     }

@@ -17,11 +17,13 @@ buildscript {
     }
 }
 
+repositories {
+    jcenter()
+}
+
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testCompile 'junit:junit:4.11'
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    compile project(':kotlin-core')
-    compile project(':kotlin-networking')
-    compile project(':kotlin-observable')
+    compile "com.lightningkite.kotlin:lk-kotlin-utils:0.2.0"
 }

@@ -1,6 +1,6 @@
 package com.ivieleague.kotlin
 
-import com.lightningkite.kotlin.runAll
+import lk.kotlin.utils.lambda.invokeAll
 import java.util.*
 
 /**
@@ -23,7 +23,7 @@ class ObservableCollectionWrapper<E>(val inner: MutableCollection<E> = HashSet()
     override fun isEmpty(): Boolean = inner.isEmpty()
 
     override fun add(element: E): Boolean = inner.add(element).also {
-        if (it) onAdd.runAll(element)
+        if (it) onAdd.invokeAll(element)
     }
 
     override fun addAll(elements: Collection<E>): Boolean {
@@ -37,7 +37,7 @@ class ObservableCollectionWrapper<E>(val inner: MutableCollection<E> = HashSet()
     override fun clear() {
         inner.clear()
         for (e in inner) {
-            onRemove.runAll(e)
+            onRemove.invokeAll(e)
         }
     }
 
@@ -48,12 +48,12 @@ class ObservableCollectionWrapper<E>(val inner: MutableCollection<E> = HashSet()
         override fun next(): E = wraps.next().also { lastElement = it }
         override fun remove() {
             wraps.remove()
-            onRemove.runAll(lastElement as E)
+            onRemove.invokeAll(lastElement as E)
         }
     }
 
     override fun remove(element: E): Boolean = inner.remove(element).also {
-        if (it) onRemove.runAll(element)
+        if (it) onRemove.invokeAll(element)
     }
 
     override fun removeAll(elements: Collection<E>): Boolean {
@@ -67,7 +67,7 @@ class ObservableCollectionWrapper<E>(val inner: MutableCollection<E> = HashSet()
     override fun retainAll(elements: Collection<E>): Boolean {
         for (e in elements) {
             if (e !in elements) {
-                onRemove.runAll(e)
+                onRemove.invokeAll(e)
             }
         }
         return inner.retainAll(elements)
