@@ -1,6 +1,6 @@
 package com.ivieleague.bullethell
 
-import com.lightningkite.kotlin.runAll
+import lk.kotlin.utils.lambda.invokeAll
 import java.util.*
 
 class Events {
@@ -9,5 +9,5 @@ class Events {
     @Suppress("UNCHECKED_CAST")
     inline fun <reified T : Any> get() = get(T::class.java.name) as MutableCollection<(T) -> Unit>
 
-    inline fun <reified T : Any> dispatch(t: T) = get<T>().runAll(t)
+    inline fun <reified T : Any> dispatch(t: T) = get<T>().invokeAll(t)
 }

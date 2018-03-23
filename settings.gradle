@@ -1,1 +1,1 @@
-include 'desktop', 'android', 'ios', 'core', 'kotlin-core', 'kotlin-networking', 'kotlin-observable'
+include 'desktop', 'core'
