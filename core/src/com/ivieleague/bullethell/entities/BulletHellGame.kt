@@ -78,8 +78,8 @@ class BulletHellGame() : ApplicationListener {
                         rotateJoy = 0.0
                 ),
                 PlayerControllerInfo(
-                        player = playerOne,
-                        controller = controllerOne,
+                        player = playerTwo,
+                        controller = controllerTwo,
                         rotateJoy = Math.PI
                 )
         )
