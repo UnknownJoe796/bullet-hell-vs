@@ -31,7 +31,7 @@ class BulletHellGame() : ApplicationListener {
     val playerOne = Player(BradysScheme())
     val playerTwo = Player(TotalControlScheme())
 
-    fun reset() {
+        fun reset() {
         println("RESET")
         world.clear()
         world.entities += Background(Color.BLACK)

@@ -58,10 +58,16 @@ class BradysScheme : PlayerController {
                 accelerateRelative(Vector2(0f, curve.toFloat())).invoke()
                 iterator += secondsPassed * PI/2
             }).invoke()
+            fire(Vector2(15f, 0f), energy = .15f, size = .5f, controller = { secondsPassed:Float ->
+
+                var curve = 25 * cos(iterator)
+
+                accelerateRelative(Vector2(0f, curve.toFloat())).invoke()
+                iterator += secondsPassed * PI/2
+            }).invoke()
+
         }
-        if (controls.buttonJustPressed(3)) {
-            fire(Vector2(0f, 0f), energy = .25f).invoke()
-        }
+
 
     }
 }
