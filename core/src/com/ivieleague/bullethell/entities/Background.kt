@@ -1,8 +1,11 @@
-package com.ivieleague.bullethell
+package com.ivieleague.bullethell.entities
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
+import com.ivieleague.bullethell.lib.Entity
+import com.ivieleague.bullethell.lib.World
+import com.ivieleague.bullethell.lib.WorldView
 
 class Background(val color: Color = Color.BLACK) : Entity {
     override val depth: Int

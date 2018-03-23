@@ -1,4 +1,4 @@
-package com.ivieleague.bullethell
+package com.ivieleague.bullethell.lib
 
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListSet

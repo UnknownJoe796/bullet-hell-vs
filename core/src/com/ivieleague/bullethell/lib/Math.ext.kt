@@ -1,4 +1,4 @@
-package com.ivieleague.bullethell
+package com.ivieleague.bullethell.lib
 
 /**
  * Created by joseph on 3/28/17.

@@ -1,4 +1,4 @@
-package com.ivieleague.bullethell
+package com.ivieleague.bullethell.lib
 
 import lk.kotlin.utils.lambda.invokeAll
 import java.util.*

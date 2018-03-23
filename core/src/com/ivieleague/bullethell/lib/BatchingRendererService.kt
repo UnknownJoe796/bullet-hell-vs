@@ -1,4 +1,4 @@
-package com.ivieleague.bullethell
+package com.ivieleague.bullethell.lib
 
 import com.badlogic.gdx.math.Matrix4
 import com.ivieleague.rendering.BatchingRenderer

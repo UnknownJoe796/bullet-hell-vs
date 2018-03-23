@@ -1,76 +1,86 @@
-package com.ivieleague.bullethell
+package com.ivieleague.bullethell.entities
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
-import com.ivieleague.kotlin.Vector2_polar
-import com.ivieleague.kotlin.minus
-import com.ivieleague.kotlin.plusAssign
-import com.ivieleague.kotlin.times
+import com.ivieleague.bullethell.lib.*
+import com.ivieleague.kotlin.*
 import com.ivieleague.rendering.InMemoryMesh
 import com.ivieleague.service.getType
 
-class Player(val gunLoadout: GunLoadout) : Entity {
+class Player(
+        val controller: PlayerController,
+        var color: Color = Color.RED,
+        var angle: Float = 0f,
+        var radius: Float = .1f,
+        var energy: Float = MAX_ENERGY,
+        var health: Float = MAX_HEALTH,
+        val position: Vector2 = Vector2(),
+        val controls: Controls = Controls()
+) : Entity {
     override val depth: Int get() = 0
 
-    val position = Vector2()
-    val velocity = Vector2()
-    var color = Color.RED
-    var radius = .1f
-    var angle = 0f
-
-    var health = 1f
-    var temp = 0f
-    var burnout = false
-    var boost = 0f
+    fun reset() {
+        health = MAX_HEALTH
+        energy = MAX_ENERGY
+    }
 
     companion object {
-        const val cooldown: Float = 1f
+        const val MAX_HEALTH: Float = 1f
+        const val MAX_ENERGY: Float = 1f
+        const val RECHARGE: Float = 1f
+        const val MAX_FREE_MOVEMENT: Float = 10f
+        const val ADDITIONAL_MOVEMENT_COST_MULTIPLIER: Float = .25f
+
+        const val SIZE_COST: Float = .1f
+        const val VELOCITY_COST: Float = .0025f
     }
 
-    fun reset() {
-        health = 1f
-        temp = 0f
-        boost = 0f
-        burnout = false
-    }
+    private var lastDeltaTime: Float = 0f
 
-    fun move(joy: Vector2) {
-        if (boost > 0f) {
-            velocity.set(joy.clamp(0f, 1f) * 20f)
-        } else {
-            velocity.set(joy.clamp(0f, 1f) * 10f)
+    class MyInterface(val player: Player, var world: World, var seconds: Float) : PlayerInterface {
+        override val energy: Float get() = player.energy
+        override val health: Float get() = player.health
+        override val positionImmutable: Vector2Immutable = player.position.immutable()
+        override val controls: Controls get() = player.controls
+
+        override fun move(amount: Vector2): PotentialAction = object : PotentialAction {
+            override val cost: Float = amount.len().minus(MAX_FREE_MOVEMENT).times(seconds).times(ADDITIONAL_MOVEMENT_COST_MULTIPLIER).coerceAtLeast(0f)
+
+            override fun invoke() {
+                if (cost > player.energy) return
+                player.energy -= cost
+
+                player.position.add(amount.times(seconds))
+            }
         }
-    }
 
-    fun doButton(world: World, pattern: Int = 0) {
-        gunLoadout.doButton(object : ShipInterface {
-            override fun shoot(velocity: Vector2, acceleration: Vector2, size: Float) {
-                if (burnout) return
-                if (temp > 2f) return
-                if (size < .5f) return
-                if (size > 2f) return
-                temp += ((size - .5f) * 100f + velocity.len() * 2f + acceleration.len() * 2f) / 500f
+        override fun fire(
+                velocity: Vector2,
+                size: Float,
+                energy: Float,
+                controller: BulletInterface.(Float) -> Unit
+        ): PotentialAction = object : PotentialAction {
+            override val cost: Float = velocity.len().times(VELOCITY_COST) + size.times(SIZE_COST) + energy
+
+            override fun invoke() {
+                if (cost > player.energy) return
+                player.energy -= cost
+
                 world.entities += Bullet().also { it ->
-                    it.color = color
-                    it.position.set(position)
-                    it.velocity.set(velocity.rotateRad(angle))
-                    it.acceleration.set(acceleration.rotateRad(angle))
+                    it.color = player.color
+                    it.position.set(player.position)
+                    it.velocity.set(velocity.rotateRad(player.angle))
+                    it.energy = energy
+                    it.controller = controller
                     it.radius = size
                 }
             }
-
-            override fun boost(time: Float) {
-                if (burnout) return
-                temp += time
-                boost = time
-            }
-        }, pattern)
+        }
     }
 
     override fun step(world: World, time: Float) {
-        position += velocity * time
         for (other in world.entities) {
             if (other is Bullet) {
                 if (color != other.color && (other.position - position).len2() < (other.radius + radius).sqr()) {
@@ -81,14 +91,10 @@ class Player(val gunLoadout: GunLoadout) : Entity {
                 }
             }
         }
-        boost -= time
-        temp -= time * cooldown
-        temp = temp.coerceAtLeast(0f)
-        if (temp > 1f) {
-            burnout = true
-        } else if (temp == 0f) {
-            burnout = false
-        }
+        energy = (energy + RECHARGE * time).coerceAtMost(MAX_ENERGY)
+
+        controller.invoke(MyInterface(this, world, time), time)
+
         if (health <= 0f) {
             world.entities -= this
             world.events.dispatch(DeathEvent(this))
@@ -154,7 +160,7 @@ class Player(val gunLoadout: GunLoadout) : Entity {
                     position.y + Math.sin(angle.toDouble()).toFloat(),
                     0f
             )
-            scale(temp * .5f, temp * .5f, 1f)
+            scale(energy * .5f / MAX_ENERGY, energy * .5f / MAX_ENERGY, 1f)
         })
         transformedCircle.transformColorAssign { colorFloatBits }
         renderer.batchingRenderer.append(transformedCircle)

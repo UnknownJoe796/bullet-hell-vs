@@ -1,4 +1,4 @@
-package com.ivieleague.bullethell
+package com.ivieleague.bullethell.lib
 
 interface Entity : Comparable<Entity> {
     val depth: Int
