@@ -26,5 +26,8 @@ class SimpleScheme : PlayerController {
                 }
             }).invoke()
         }
+        if (controls.buttonJustPressed(3)) {
+            fire(Vector2(0f, 0f), energy = .25f).invoke()
+        }
     }
 }

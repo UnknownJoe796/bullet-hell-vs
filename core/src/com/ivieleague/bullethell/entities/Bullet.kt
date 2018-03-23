@@ -24,6 +24,8 @@ class Bullet(
 ) : Entity {
     override val depth: Int get() = 1
 
+    var activeFor: Float = 0f
+
     class MyInterface(val bullet: Bullet, var world: World, var seconds: Float) : BulletInterface {
         override val energy: Float get() = bullet.energy
         override val size: Float get() = bullet.radius
@@ -89,6 +91,7 @@ class Bullet(
     override fun step(world: World, time: Float) {
         position += velocity * time
         controller.invoke(MyInterface(this, world, time), time)
+        activeFor += time
         life -= time
         if (life <= 0f) world.entities -= this
     }

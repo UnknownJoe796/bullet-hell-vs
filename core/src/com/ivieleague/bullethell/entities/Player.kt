@@ -83,11 +83,20 @@ class Player(
     override fun step(world: World, time: Float) {
         for (other in world.entities) {
             if (other is Bullet) {
-                if (color != other.color && (other.position - position).len2() < (other.radius + radius).sqr()) {
-                    //hit
-                    health -= other.damage
-                    world.entities -= other
-                    world.events.dispatch(DamageEvent(this, other.damage))
+                if ((other.position - position).len2() < (other.radius + radius).sqr()) {
+
+                    if (color == other.color) {
+                        if (other.activeFor > 1f) {
+                            //absorb energy
+                            energy += other.energy
+                            world.entities -= other
+                        }
+                    } else {
+                        //hit
+                        health -= other.damage
+                        world.entities -= other
+                        world.events.dispatch(DamageEvent(this, other.damage))
+                    }
                 }
             }
         }
