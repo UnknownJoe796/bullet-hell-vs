@@ -74,7 +74,7 @@ class Bullet(
                 world.entities += Bullet(playerAngle = bullet.playerAngle).also { it ->
                     it.color = bullet.color
                     it.position.set(bullet.position)
-                    it.velocity.set(bullet.velocity + velocity.rotateRad(bullet.velocity.angleRad()))
+                    it.velocity.set(bullet.velocity + velocity.rotateRad(bullet.playerAngle))
                     it.energy = energy
                     it.controller = controller
                     it.radius = size
