@@ -3,6 +3,7 @@ package com.ivieleague.bullethell.entities
 import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.controllers.Controller
 import com.badlogic.gdx.controllers.Controllers
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
@@ -58,23 +59,40 @@ class BulletHellGame() : ApplicationListener {
     override fun create() {
     }
 
+    data class PlayerControllerInfo(
+            val player: Player,
+            val controller: Controller?,
+            val rotateJoy: Double
+    )
+
     override fun render() {
 
         //Controls
         val controllers = Controllers.getControllers()
         val controllerOne = controllers.firstOrNull()
         val controllerTwo = if (controllers.size >= 2) controllers[1] else null
-        val playerControllerMap = mapOf(playerOne to controllerOne, playerTwo to controllerTwo)
+        val playerControllerInfos = listOf(
+                PlayerControllerInfo(
+                        player = playerOne,
+                        controller = controllerOne,
+                        rotateJoy = 0.0
+                ),
+                PlayerControllerInfo(
+                        player = playerOne,
+                        controller = controllerOne,
+                        rotateJoy = Math.PI
+                )
+        )
 
-        for ((player, controller) in playerControllerMap) {
-            player.controls.flip()
+        for (info in playerControllerInfos) {
+            info.player.controls.flip()
 
-            if (controller == null) continue
+            if (info.controller == null) continue
 
-            player.controls.joystick += Vector2(controller.getAxis(0), -controller.getAxis(3))
+            info.player.controls.joystick += Vector2(info.controller.getAxis(0), -info.controller.getAxis(3)).rotateRad(info.rotateJoy.toFloat())
 
             for (index in 0 until Controls.BUTTON_COUNT) {
-                player.controls.buttons[index] = controller.getButton(index)
+                info.player.controls.buttons[index] = info.controller.getButton(index)
             }
         }
 
@@ -101,8 +119,8 @@ class BulletHellGame() : ApplicationListener {
 
         //Reset
         if (world.entities.count { it is Player } <= 1) {
-            for (player in playerControllerMap.keys) {
-                if (player.controls.buttons[9]) {
+            for (info in playerControllerInfos) {
+                if (info.player.controls.buttons[9]) {
                     reset()
                 }
             }
