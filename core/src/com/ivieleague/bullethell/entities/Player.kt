@@ -62,20 +62,36 @@ class Player(
                 size: Float,
                 energy: Float,
                 controller: BulletInterface.(Float) -> Unit
-        ): PotentialAction = object : PotentialAction {
-            override val cost: Float = velocity.len().times(VELOCITY_COST) + size.times(SIZE_COST) + energy
+        ): PotentialAction {
+            if (size !in 0.25f..4f) {
+                println("WARN: Illegal argument for shot. Size must be between .25 and 4")
+                return object : PotentialAction {
+                    override val cost: Float = Float.MAX_VALUE
+                    override fun invoke() {}
+                }
+            }
+            if (velocity.len() > 40.1f) {
+                println("WARN: Illegal argument for shot. Speed must be less than 40")
+                return object : PotentialAction {
+                    override val cost: Float = Float.MAX_VALUE
+                    override fun invoke() {}
+                }
+            }
+            return object : PotentialAction {
+                override val cost: Float = velocity.len().times(VELOCITY_COST) + size.times(SIZE_COST) + energy
 
-            override fun invoke() {
-                if (cost > player.energy) return
-                player.energy -= cost
+                override fun invoke() {
+                    if (cost > player.energy) return
+                    player.energy -= cost
 
-                world.entities += Bullet(player.angle).also { it ->
-                    it.color = player.color
-                    it.position.set(player.position)
-                    it.velocity.set(velocity.rotateRad(player.angle))
-                    it.energy = energy
-                    it.controller = controller
-                    it.radius = size
+                    world.entities += Bullet(player.angle).also { it ->
+                        it.color = player.color
+                        it.position.set(player.position)
+                        it.velocity.set(velocity.rotateRad(player.angle))
+                        it.energy = energy
+                        it.controller = controller
+                        it.radius = size
+                    }
                 }
             }
         }

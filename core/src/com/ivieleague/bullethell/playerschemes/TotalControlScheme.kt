@@ -29,7 +29,7 @@ class TotalControlScheme : PlayerController {
             shotgun(ship)
         }
         if (ship.controls.buttonJustPressed(1)) {
-            yankFocus(ship, defaultShotVel(), { ship.controls.buttons[5] })
+            collapser(ship, defaultShotVel(), { ship.controls.buttons[5] })
         }
         if (ship.controls.buttonJustPressed(2)) {
             backsploder(ship, { ship.controls.buttonJustPressed(6) })
@@ -59,11 +59,11 @@ class TotalControlScheme : PlayerController {
 
     private fun shotgun(ship: PlayerInterface) {
         val count = 7
-        val startAngle = (-35).toFloat().toRadians()
-        val endAngle = (35).toFloat().toRadians()
+        val startAngle = (-25).toFloat().toRadians()
+        val endAngle = (25).toFloat().toRadians()
         val calls = (0 until count).map {
             val angle = (endAngle - startAngle) * (it.toFloat() / count.minus(1)) + startAngle
-            ship.fire(Vector2_polar(15f, angle.toDouble()))
+            ship.fire(Vector2_polar(15f, baseAim + angle.toDouble()))
         }
         if (calls.sumByDouble { it.cost.toDouble() }.toFloat() < ship.energy) {
             calls.forEach { it.invoke() }
@@ -71,7 +71,7 @@ class TotalControlScheme : PlayerController {
     }
 
     private fun sniper(ship: PlayerInterface) {
-        ship.fire(Vector2_polar(60f, baseAim.toDouble())).invoke()
+        ship.fire(Vector2_polar(40f, baseAim.toDouble())).invoke()
     }
 
     private fun wallShot(ship: PlayerInterface) {
@@ -134,10 +134,10 @@ class TotalControlScheme : PlayerController {
         }).invoke()
     }
 
-    private fun yankFocus(ship: PlayerInterface, initVel: Vector2, pullCondition: () -> Boolean) {
+    private fun collapser(ship: PlayerInterface, initVel: Vector2, pullCondition: () -> Boolean) {
         ship.fire(initVel, energy = .15f, controller = {
             if (pullCondition()) {
-                val target = positionImmutable.cpy().addPolar(30f, baseAim.toDouble() - ship.angle)
+                val target = positionImmutable.cpy().addPolar(20f, baseAim.toDouble() - ship.angle)
                 val towardsTarget = ship.positionImmutable.cpy().minus(target).clamp(0f, 1f).scl(40f)
                 accelerateAbsolute(towardsTarget).invoke()
             }
