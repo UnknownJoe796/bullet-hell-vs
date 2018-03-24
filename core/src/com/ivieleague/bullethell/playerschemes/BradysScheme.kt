@@ -54,8 +54,8 @@ class BradysScheme : PlayerController {
             fire(velocity = Vector2(10f, 0f), energy = .5f, size = .3f, controller = {
 
                 if (controls.buttonJustPressed(6)) {
-                    repeat(7) {
-                        fire(velocity = Vector2_polar(5f, Math.PI * 2 * (it.toDouble() / 7)), size = .2f).invoke()
+                    repeat(5) {
+                        fire(velocity = Vector2_polar(5f, PI / 3  - PI/ 2  * (it.toDouble()/3)), size = .2f).invoke()
                     }
 
                 }
