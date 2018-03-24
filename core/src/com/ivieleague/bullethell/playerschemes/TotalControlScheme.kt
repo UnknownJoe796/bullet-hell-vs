@@ -29,7 +29,7 @@ class TotalControlScheme : PlayerController {
             shotgun(ship)
         }
         if (ship.controls.buttonJustPressed(1)) {
-            yankFocus(ship, defaultShotVel(), { ship.controls.buttons[5] })
+            collapser(ship, defaultShotVel(), { ship.controls.buttons[5] })
         }
         if (ship.controls.buttonJustPressed(2)) {
             backsploder(ship, { ship.controls.buttonJustPressed(6) })
@@ -71,7 +71,7 @@ class TotalControlScheme : PlayerController {
     }
 
     private fun sniper(ship: PlayerInterface) {
-        ship.fire(Vector2_polar(60f, baseAim.toDouble())).invoke()
+        ship.fire(Vector2_polar(40f, baseAim.toDouble())).invoke()
     }
 
     private fun wallShot(ship: PlayerInterface) {
@@ -134,7 +134,7 @@ class TotalControlScheme : PlayerController {
         }).invoke()
     }
 
-    private fun yankFocus(ship: PlayerInterface, initVel: Vector2, pullCondition: () -> Boolean) {
+    private fun collapser(ship: PlayerInterface, initVel: Vector2, pullCondition: () -> Boolean) {
         ship.fire(initVel, energy = .15f, controller = {
             if (pullCondition()) {
                 val target = positionImmutable.cpy().addPolar(20f, baseAim.toDouble() - ship.angle)
