@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.ivieleague.bullethell.entities.Player
 import com.ivieleague.bullethell.entities.PlayerController
 import com.ivieleague.bullethell.entities.PlayerInterface
+import com.ivieleague.kotlin.Vector2_polar
 import com.ivieleague.kotlin.minus
 import java.lang.Math.*
 import kotlin.math.PI
@@ -20,54 +21,50 @@ class BradysScheme : PlayerController {
 
         //Button 1
         if (controls.buttonJustPressed(0)) {
-            fire(Vector2(10f, -5f), energy = .2f, size = .5f , controller = {
-                if(velocityImmutable.x > 0){
+            fire(velocity = Vector2(10f, 0f), energy = .3f, size = .5f, controller = {
+                if (velocityImmutable.x > 0) {
                     accelerateRelative(Vector2(0f, 1f)).invoke()
 
                 }
-                if (controls.buttonJustPressed(1)) {
-                    fire(Vector2(-1f, 5f), size = .5f).invoke()
+                if (controls.buttonJustPressed(4)) {
+                    fire(velocity = Vector2(0f, 10f), size = .5f).invoke()
+                    fire(velocity = Vector2(0f, -10f), size = .5f).invoke()
+
                 }
             }).invoke()
 
-            fire(Vector2(10f, 5f), energy = .2f, size = .5f, controller = {
-                if(velocityImmutable.x < 0){
-                    accelerateRelative(Vector2(0f, -1f)).invoke()
 
-                }
-                if (controls.buttonJustPressed(1) ){
-                    fire(Vector2(-1f, -5f), size = .5f).invoke()
-                }
+        }
+
+        //button 3
+        if (controls.buttonJustPressed(1)) {
+            var iterator = 0.0
+            fire(velocity = Vector2(10f, 0f), energy = .15f, size = .5f, controller = { secondsPassed: Float ->
+
+                var curve = 10 * cos(iterator)
+
+                accelerateRelative(Vector2(0f, curve.toFloat())).invoke()
+                iterator += secondsPassed * PI / 2
             }).invoke()
+
         }
 
         //button 3
         if (controls.buttonJustPressed(2)) {
-            var iterator = 0.0
-            fire(Vector2(15f, -5f), energy = .15f, size = .5f, controller = { secondsPassed:Float ->
+            fire(velocity = Vector2(10f, 0f), energy = .5f, size = .3f, controller = {
 
-                var curve = 25 * cos(iterator)
+                if (controls.buttonJustPressed(6)) {
+                    repeat(5) {
+                        fire(velocity = Vector2_polar(5f, PI / 3  - PI/ 2  * (it.toDouble()/3)), size = .2f).invoke()
+                    }
 
-                accelerateRelative(Vector2(0f, curve.toFloat())).invoke()
-                iterator += secondsPassed * PI/2
-            }).invoke()
-            fire(Vector2(15f, 5f), energy = .15f, size = .5f, controller = { secondsPassed:Float ->
-
-                var curve = 25 * cos(iterator)
-
-                accelerateRelative(Vector2(0f, curve.toFloat())).invoke()
-                iterator += secondsPassed * PI/2
-            }).invoke()
-            fire(Vector2(15f, 0f), energy = .15f, size = .5f, controller = { secondsPassed:Float ->
-
-                var curve = 25 * cos(iterator)
-
-                accelerateRelative(Vector2(0f, curve.toFloat())).invoke()
-                iterator += secondsPassed * PI/2
+                }
             }).invoke()
 
         }
+        if (controls.buttons[3]) {
+            fire(velocity = Vector2(5f, 0f), size = .1f).invoke()
 
-
+        }
     }
 }
