@@ -44,6 +44,7 @@ class Player(
         override val health: Float get() = player.health
         override val positionImmutable: Vector2Immutable = player.position.immutable()
         override val controls: Controls get() = player.controls
+        override val angle: Float get() = player.angle
 
         override fun move(amount: Vector2): PotentialAction = object : PotentialAction {
             override val cost: Float = amount.len().minus(MAX_FREE_MOVEMENT).times(seconds).times(ADDITIONAL_MOVEMENT_COST_MULTIPLIER).coerceAtLeast(0f)

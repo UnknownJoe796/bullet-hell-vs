@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.ivieleague.kotlin.Vector2Immutable
 
 interface PlayerInterface {
+    val angle: Float
     val energy: Float
     val health: Float
     val positionImmutable: Vector2Immutable
